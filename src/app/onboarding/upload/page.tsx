@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 
-export default function OnboardingUpload() {
+function OnboardingUploadContent() {
   const searchParams = useSearchParams();
   const interviewStatus = searchParams.get("status");
   const isScheduled = interviewStatus === "scheduled";
@@ -196,5 +196,13 @@ export default function OnboardingUpload() {
         </button>
       </main>
     </div>
+  );
+}
+
+export default function OnboardingUpload() {
+  return (
+    <Suspense fallback={<div className="flex min-h-screen items-center justify-center">Loading...</div>}>
+      <OnboardingUploadContent />
+    </Suspense>
   );
 }
