@@ -1,9 +1,10 @@
 "use client";
 
 import { useState, Suspense } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 
 function OnboardingUploadContent() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const interviewStatus = searchParams.get("status");
   const isScheduled = interviewStatus === "scheduled";
@@ -11,6 +12,17 @@ function OnboardingUploadContent() {
   const [selectedDate, setSelectedDate] = useState<string>("");
   const [resumeFile, setResumeFile] = useState<File | null>(null);
   const [jobDescription, setJobDescription] = useState<string>("");
+
+  // Validation: resume required for all, date + job description required for scheduled
+  const canContinue = isScheduled
+    ? resumeFile && selectedDate && jobDescription.trim()
+    : resumeFile;
+
+  const handleContinue = () => {
+    if (canContinue) {
+      router.push("/onboarding/diagnostic");
+    }
+  };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -191,7 +203,15 @@ function OnboardingUploadContent() {
           )}
         </div>
 
-        <button className="mt-12 w-full rounded-md bg-primary px-8 py-3 text-base font-medium text-primary-foreground hover:bg-primary/90">
+        <button
+          onClick={handleContinue}
+          disabled={!canContinue}
+          className={`mt-12 w-full rounded-md px-8 py-3 text-base font-medium ${
+            canContinue
+              ? "bg-primary text-primary-foreground hover:bg-primary/90"
+              : "cursor-not-allowed bg-muted text-muted-foreground"
+          }`}
+        >
           Continue
         </button>
       </main>
