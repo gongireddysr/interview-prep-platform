@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 type TabId = "coding" | "explanation" | "recruiter" | "behavioral";
 
@@ -43,6 +44,7 @@ const QUESTIONS: Record<TabId, string> = {
 const LANGUAGES = ["JavaScript", "Python", "Java"];
 
 export default function DiagnosticPage() {
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState<TabId>("coding");
   const [tabStates, setTabStates] = useState<Record<TabId, TabState>>({
     coding: { completed: false, unlocked: true },
@@ -80,7 +82,7 @@ export default function DiagnosticPage() {
   };
 
   const handleFinalSubmit = () => {
-    setShowSuccess(true);
+    router.push("/dashboard");
   };
 
   const allCompleted = Object.values(tabStates).every((s) => s.completed);
