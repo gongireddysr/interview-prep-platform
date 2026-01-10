@@ -17,7 +17,9 @@ export default function PrepPage() {
   ];
 
   const handleStartPrep = () => {
-    // TODO: Implement start prep functionality
+    if (selectedCategory === "recruiter") {
+      router.push("/prep/recruiter");
+    }
   };
 
   const handleMockInstead = () => {
