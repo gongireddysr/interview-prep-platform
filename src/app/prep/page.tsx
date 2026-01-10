@@ -19,6 +19,8 @@ export default function PrepPage() {
   const handleStartPrep = () => {
     if (selectedCategory === "recruiter") {
       router.push("/prep/recruiter");
+    } else if (selectedCategory === "behavioral") {
+      router.push("/prep/behavioral");
     }
   };
 
