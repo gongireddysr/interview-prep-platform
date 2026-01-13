@@ -21,6 +21,8 @@ export default function PrepPage() {
       router.push("/prep/recruiter");
     } else if (selectedCategory === "behavioral") {
       router.push("/prep/behavioral");
+    } else if (selectedCategory === "coding") {
+      router.push("/prep/coding");
     }
   };
 
