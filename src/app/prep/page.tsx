@@ -23,6 +23,8 @@ export default function PrepPage() {
       router.push("/prep/behavioral");
     } else if (selectedCategory === "coding") {
       router.push("/prep/coding");
+    } else if (selectedCategory === "system-design") {
+      router.push("/prep/system-design");
     }
   };
 
