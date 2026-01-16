@@ -19,6 +19,8 @@ export default function MockInterviewPage() {
   const handleStartInterview = () => {
     if (selectedRound === "recruiter") {
       router.push("/mock_interview/recruiter");
+    } else if (selectedRound === "coding") {
+      router.push("/mock_interview/coding");
     }
   };
 
