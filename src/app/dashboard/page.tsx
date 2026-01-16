@@ -20,7 +20,7 @@ export default function DashboardPage() {
       description:
         "Simulate real interview conditions. Get feedback on coding, system design, and behavioral questions.",
       icon: "🎯",
-      route: "/mock",
+      route: "/mock_interview",
     },
   ];
 
