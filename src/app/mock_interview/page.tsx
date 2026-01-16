@@ -21,6 +21,8 @@ export default function MockInterviewPage() {
       router.push("/mock_interview/recruiter");
     } else if (selectedRound === "coding") {
       router.push("/mock_interview/coding");
+    } else if (selectedRound === "system-design") {
+      router.push("/mock_interview/system_design");
     }
   };
 
