@@ -1,10 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 type RoundId = "recruiter" | "coding" | "system-design" | "behavioral";
 
 export default function MockInterviewPage() {
+  const router = useRouter();
   const [selectedRound, setSelectedRound] = useState<RoundId | null>(null);
 
   const rounds: { id: RoundId; label: string }[] = [
@@ -15,7 +17,9 @@ export default function MockInterviewPage() {
   ];
 
   const handleStartInterview = () => {
-    // Non-functional
+    if (selectedRound === "recruiter") {
+      router.push("/mock_interview/recruiter");
+    }
   };
 
   return (
