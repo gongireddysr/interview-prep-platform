@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 interface ReadinessData {
@@ -45,7 +45,7 @@ const RECOMMENDATION_TEXT = {
   not_ready: "We recommend starting with Guided Preparation before mock interviews.",
 };
 
-export default function ReadinessPage() {
+function ReadinessContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [data, setData] = useState<ReadinessData | null>(null);
@@ -135,5 +135,19 @@ export default function ReadinessPage() {
         </div>
       </main>
     </div>
+  );
+}
+
+export default function ReadinessPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex min-h-screen items-center justify-center bg-background">
+          <div className="text-muted-foreground">Loading results...</div>
+        </div>
+      }
+    >
+      <ReadinessContent />
+    </Suspense>
   );
 }
