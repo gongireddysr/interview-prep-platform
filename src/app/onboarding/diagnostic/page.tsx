@@ -59,6 +59,7 @@ export default function DiagnosticPage() {
     behavioral: { answer: "" },
   });
   const [showSuccess, setShowSuccess] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleTabClick = (tabId: TabId) => {
     if (tabStates[tabId].unlocked) {
@@ -81,8 +82,31 @@ export default function DiagnosticPage() {
     }
   };
 
-  const handleFinalSubmit = () => {
-    router.push("/dashboard");
+  const handleFinalSubmit = async () => {
+    setIsSubmitting(true);
+    try {
+      const response = await fetch("/api/diagnostics/evaluate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to evaluate diagnostic");
+      }
+
+      const result = await response.json();
+      
+      const params = new URLSearchParams({
+        readiness: result.readiness,
+        weakAreas: encodeURIComponent(JSON.stringify(result.weakAreas)),
+      });
+
+      router.push(`/onboarding/readiness?${params.toString()}`);
+    } catch (error) {
+      console.error("Submission error:", error);
+      setIsSubmitting(false);
+    }
   };
 
   const allCompleted = Object.values(tabStates).every((s) => s.completed);
@@ -260,9 +284,10 @@ export default function DiagnosticPage() {
             {isLastTab && allCompleted && !showSuccess && (
               <button
                 onClick={handleFinalSubmit}
-                className="rounded-md bg-green-600 px-6 py-3 text-sm font-medium text-white hover:bg-green-700"
+                disabled={isSubmitting}
+                className="rounded-md bg-green-600 px-6 py-3 text-sm font-medium text-white hover:bg-green-700 disabled:cursor-not-allowed disabled:opacity-50"
               >
-                Submit Diagnostic
+                {isSubmitting ? "Evaluating..." : "Submit Diagnostic"}
               </button>
             )}
 
