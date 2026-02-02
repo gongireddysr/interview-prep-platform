@@ -6,8 +6,14 @@ import { useRouter } from "next/navigation";
 export default function SystemDesignPage() {
   const router = useRouter();
   const [answer, setAnswer] = useState("");
+  const [questionIndex, setQuestionIndex] = useState(0);
 
-  const currentQuestion = "Design a URL shortening service like bit.ly.";
+  const questions = [
+    "Design a URL shortening service like bit.ly.",
+    "Design a real-time chat application like Slack."
+  ];
+
+  const currentQuestion = questions[questionIndex];
 
   const handleBack = () => {
     router.push("/prep");
@@ -18,7 +24,8 @@ export default function SystemDesignPage() {
   };
 
   const handleNextQuestion = () => {
-    // Non-functional
+    setQuestionIndex((prev) => (prev + 1) % questions.length);
+    setAnswer("");
   };
 
   return (

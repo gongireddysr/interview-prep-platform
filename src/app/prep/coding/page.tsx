@@ -6,8 +6,14 @@ import { useRouter } from "next/navigation";
 export default function CodingPrepPage() {
   const router = useRouter();
   const [answer, setAnswer] = useState("");
+  const [questionIndex, setQuestionIndex] = useState(0);
 
-  const currentQuestion = "Given an array of integers, find two numbers that add up to a specific target.";
+  const questions = [
+    "Given an array of integers, find two numbers that add up to a specific target.",
+    "Implement a function to reverse a linked list."
+  ];
+
+  const currentQuestion = questions[questionIndex];
 
   const handleBack = () => {
     router.push("/prep");
@@ -18,7 +24,8 @@ export default function CodingPrepPage() {
   };
 
   const handleNextQuestion = () => {
-    // Non-functional
+    setQuestionIndex((prev) => (prev + 1) % questions.length);
+    setAnswer("");
   };
 
   return (

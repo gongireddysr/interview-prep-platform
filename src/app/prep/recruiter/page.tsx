@@ -6,8 +6,14 @@ import { useRouter } from "next/navigation";
 export default function RecruiterScreenPage() {
   const router = useRouter();
   const [answer, setAnswer] = useState("");
+  const [questionIndex, setQuestionIndex] = useState(0);
 
-  const currentQuestion = "Tell me about yourself and your background.";
+  const questions = [
+    "Tell me about yourself and your background.",
+    "Why are you interested in this role?"
+  ];
+
+  const currentQuestion = questions[questionIndex];
 
   const handleBack = () => {
     router.push("/prep");
@@ -18,7 +24,8 @@ export default function RecruiterScreenPage() {
   };
 
   const handleNextQuestion = () => {
-    // Non-functional
+    setQuestionIndex((prev) => (prev + 1) % questions.length);
+    setAnswer("");
   };
 
   return (
