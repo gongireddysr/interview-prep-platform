@@ -6,8 +6,14 @@ import { useRouter } from "next/navigation";
 export default function BehavioralPage() {
   const router = useRouter();
   const [answer, setAnswer] = useState("");
+  const [questionIndex, setQuestionIndex] = useState(0);
 
-  const currentQuestion = "Tell me about a time when you faced a challenging situation at work.";
+  const questions = [
+    "Tell me about a time when you faced a challenging situation at work.",
+    "Describe a situation where you had to work with a difficult team member."
+  ];
+
+  const currentQuestion = questions[questionIndex];
 
   const handleBack = () => {
     router.push("/prep");
@@ -18,7 +24,8 @@ export default function BehavioralPage() {
   };
 
   const handleNextQuestion = () => {
-    // Non-functional
+    setQuestionIndex((prev) => (prev + 1) % questions.length);
+    setAnswer("");
   };
 
   return (
