@@ -29,7 +29,7 @@ export default function PrepPage() {
   };
 
   const handleMockInstead = () => {
-    router.push("/mock");
+    router.push("/mock_interview");
   };
 
   return (
