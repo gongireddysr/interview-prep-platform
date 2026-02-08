@@ -9,24 +9,20 @@ export default function MockRecruiterPage() {
 
   const exampleQuestion = "Tell me about yourself.";
 
-  const handleBack = () => {
-    router.push("/mock_interview");
-  };
-
-  const handleSubmit = () => {
-    // Non-functional
+  const handleNextRound = () => {
+    router.push("/mock_interview/coding");
   };
 
   return (
     <div className="flex min-h-screen flex-col px-6 py-4">
-      {/* Back Button - Top Right */}
-      <div className="flex justify-end">
+      {/* Navigation - Top Right */}
+      <div className="flex justify-end gap-4">
         <button
-          onClick={handleBack}
+          onClick={handleNextRound}
           className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
         >
-          <span>←</span>
-          <span>Back</span>
+          <span>Next Round</span>
+          <span>→</span>
         </button>
       </div>
 
@@ -34,7 +30,7 @@ export default function MockRecruiterPage() {
       <div className="mt-8 w-full max-w-3xl mx-auto">
         <div className="rounded-lg border border-border bg-card p-8">
           <h2 className="text-sm font-medium text-muted-foreground mb-4">
-            Recruiter Question
+            Round 1: Recruiter Question
           </h2>
           <p className="text-2xl font-semibold text-foreground leading-relaxed">
             {exampleQuestion}
@@ -50,16 +46,6 @@ export default function MockRecruiterPage() {
           placeholder="Type your answer here..."
           className="w-full h-64 rounded-lg border border-border bg-background p-4 text-foreground placeholder:text-muted-foreground resize-none focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
         />
-      </div>
-
-      {/* Submit Button */}
-      <div className="mt-8 w-full max-w-3xl mx-auto">
-        <button
-          onClick={handleSubmit}
-          className="w-full rounded-md bg-primary px-6 py-3 text-base font-medium text-primary-foreground hover:bg-primary/90"
-        >
-          Submit
-        </button>
       </div>
     </div>
   );
