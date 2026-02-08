@@ -9,8 +9,8 @@ export default function MockSystemDesignPage() {
 
   const exampleQuestion = "Design a URL shortening service like bit.ly.";
 
-  const handleBack = () => {
-    router.push("/mock_interview");
+  const handlePreviousRound = () => {
+    router.push("/mock_interview/behavioral");
   };
 
   const handleSubmit = () => {
@@ -19,14 +19,14 @@ export default function MockSystemDesignPage() {
 
   return (
     <div className="flex min-h-screen flex-col px-6 py-4">
-      {/* Back Button - Top Right */}
-      <div className="flex justify-end">
+      {/* Navigation - Top Right */}
+      <div className="flex justify-end gap-4">
         <button
-          onClick={handleBack}
+          onClick={handlePreviousRound}
           className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
         >
           <span>←</span>
-          <span>Back</span>
+          <span>Previous Round</span>
         </button>
       </div>
 
@@ -34,7 +34,7 @@ export default function MockSystemDesignPage() {
       <div className="mt-8 w-full max-w-3xl mx-auto">
         <div className="rounded-lg border border-border bg-card p-8">
           <h2 className="text-sm font-medium text-muted-foreground mb-4">
-            System Design Question
+            Round 4: System Design Question
           </h2>
           <p className="text-2xl font-semibold text-foreground leading-relaxed">
             {exampleQuestion}
