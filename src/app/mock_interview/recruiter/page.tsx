@@ -1,15 +1,22 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useMockInterview } from "@/context/MockInterviewContext";
 
 export default function MockRecruiterPage() {
   const router = useRouter();
-  const [answer, setAnswer] = useState("");
+  const { answers, setAnswer } = useMockInterview();
+  const [localAnswer, setLocalAnswer] = useState(answers.recruiter);
 
   const exampleQuestion = "Tell me about yourself.";
 
+  useEffect(() => {
+    setLocalAnswer(answers.recruiter);
+  }, [answers.recruiter]);
+
   const handleNextRound = () => {
+    setAnswer("recruiter", localAnswer);
     router.push("/mock_interview/coding");
   };
 
@@ -41,8 +48,8 @@ export default function MockRecruiterPage() {
       {/* Answer Input Box */}
       <div className="mt-8 flex-1 w-full max-w-3xl mx-auto">
         <textarea
-          value={answer}
-          onChange={(e) => setAnswer(e.target.value)}
+          value={localAnswer}
+          onChange={(e) => setLocalAnswer(e.target.value)}
           placeholder="Type your answer here..."
           className="w-full h-64 rounded-lg border border-border bg-background p-4 text-foreground placeholder:text-muted-foreground resize-none focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
         />

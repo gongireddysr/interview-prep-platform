@@ -1,19 +1,27 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useMockInterview } from "@/context/MockInterviewContext";
 
 export default function MockBehavioralPage() {
   const router = useRouter();
-  const [answer, setAnswer] = useState("");
+  const { answers, setAnswer } = useMockInterview();
+  const [localAnswer, setLocalAnswer] = useState(answers.behavioral);
 
   const exampleQuestion = "Tell me about a time when you had to handle a conflict within your team.";
 
+  useEffect(() => {
+    setLocalAnswer(answers.behavioral);
+  }, [answers.behavioral]);
+
   const handlePreviousRound = () => {
+    setAnswer("behavioral", localAnswer);
     router.push("/mock_interview/coding");
   };
 
   const handleNextRound = () => {
+    setAnswer("behavioral", localAnswer);
     router.push("/mock_interview/system_design");
   };
 
@@ -52,8 +60,8 @@ export default function MockBehavioralPage() {
       {/* Answer Input Box */}
       <div className="mt-8 flex-1 w-full max-w-3xl mx-auto">
         <textarea
-          value={answer}
-          onChange={(e) => setAnswer(e.target.value)}
+          value={localAnswer}
+          onChange={(e) => setLocalAnswer(e.target.value)}
           placeholder="Type your answer here..."
           className="w-full h-64 rounded-lg border border-border bg-background p-4 text-foreground placeholder:text-muted-foreground resize-none focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
         />

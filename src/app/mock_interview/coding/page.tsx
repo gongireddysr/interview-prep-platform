@@ -1,19 +1,27 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useMockInterview } from "@/context/MockInterviewContext";
 
 export default function MockCodingPage() {
   const router = useRouter();
-  const [answer, setAnswer] = useState("");
+  const { answers, setAnswer } = useMockInterview();
+  const [localAnswer, setLocalAnswer] = useState(answers.coding);
 
   const exampleQuestion = "Given an array of integers, find two numbers that add up to a specific target.";
 
+  useEffect(() => {
+    setLocalAnswer(answers.coding);
+  }, [answers.coding]);
+
   const handlePreviousRound = () => {
+    setAnswer("coding", localAnswer);
     router.push("/mock_interview/recruiter");
   };
 
   const handleNextRound = () => {
+    setAnswer("coding", localAnswer);
     router.push("/mock_interview/behavioral");
   };
 
@@ -52,8 +60,8 @@ export default function MockCodingPage() {
       {/* Answer Input Box */}
       <div className="mt-8 flex-1 w-full max-w-3xl mx-auto">
         <textarea
-          value={answer}
-          onChange={(e) => setAnswer(e.target.value)}
+          value={localAnswer}
+          onChange={(e) => setLocalAnswer(e.target.value)}
           placeholder="Type your answer here..."
           className="w-full h-64 rounded-lg border border-border bg-background p-4 text-foreground placeholder:text-muted-foreground resize-none focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
         />
