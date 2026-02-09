@@ -1,20 +1,54 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useMockInterview } from "@/context/MockInterviewContext";
 
 export default function MockSystemDesignPage() {
   const router = useRouter();
-  const [answer, setAnswer] = useState("");
+  const { answers, setAnswer } = useMockInterview();
+  const [localAnswer, setLocalAnswer] = useState(answers.systemDesign);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const exampleQuestion = "Design a URL shortening service like bit.ly.";
 
+  useEffect(() => {
+    setLocalAnswer(answers.systemDesign);
+  }, [answers.systemDesign]);
+
   const handlePreviousRound = () => {
+    setAnswer("systemDesign", localAnswer);
     router.push("/mock_interview/behavioral");
   };
 
-  const handleSubmit = () => {
-    // Non-functional
+  const handleSubmit = async () => {
+    setIsSubmitting(true);
+    setAnswer("systemDesign", localAnswer);
+
+    const payload = {
+      recruiter: { answer: answers.recruiter },
+      coding: { answer: answers.coding },
+      behavioral: { answer: answers.behavioral },
+      systemDesign: { answer: localAnswer },
+    };
+
+    try {
+      const response = await fetch("/api/mock_interview/evaluate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        sessionStorage.setItem("mockInterviewResult", JSON.stringify(result));
+        router.push("/mock_interview/results");
+      }
+    } catch (error) {
+      console.error("Submission error:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -45,8 +79,8 @@ export default function MockSystemDesignPage() {
       {/* Answer Input Box */}
       <div className="mt-8 flex-1 w-full max-w-3xl mx-auto">
         <textarea
-          value={answer}
-          onChange={(e) => setAnswer(e.target.value)}
+          value={localAnswer}
+          onChange={(e) => setLocalAnswer(e.target.value)}
           placeholder="Type your answer here..."
           className="w-full h-64 rounded-lg border border-border bg-background p-4 text-foreground placeholder:text-muted-foreground resize-none focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
         />
@@ -56,9 +90,10 @@ export default function MockSystemDesignPage() {
       <div className="mt-8 w-full max-w-3xl mx-auto">
         <button
           onClick={handleSubmit}
-          className="w-full rounded-md bg-primary px-6 py-3 text-base font-medium text-primary-foreground hover:bg-primary/90"
+          disabled={isSubmitting}
+          className="w-full rounded-md bg-primary px-6 py-3 text-base font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
         >
-          Submit
+          {isSubmitting ? "Submitting..." : "Submit"}
         </button>
       </div>
     </div>
