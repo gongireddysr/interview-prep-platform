@@ -186,21 +186,24 @@ function OnboardingUploadContent() {
             </div>
           </div>
 
-          {/* Job Description - Only for Scheduled */}
-          {isScheduled && (
-            <div>
-              <label className="text-sm font-medium text-muted-foreground">
-                Job Description
-              </label>
-              <textarea
-                value={jobDescription}
-                onChange={(e) => setJobDescription(e.target.value)}
-                placeholder="Paste the job description here..."
-                rows={6}
-                className="mt-3 w-full resize-none rounded-md border border-border bg-transparent px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none"
-              />
-            </div>
-          )}
+          {/* Job Description - Required for Scheduled, Optional for Preparing */}
+          <div>
+            <label className="text-sm font-medium text-muted-foreground">
+              Job Description {!isScheduled && <span className="text-xs text-muted-foreground/60">(Optional)</span>}
+            </label>
+            <textarea
+              value={jobDescription}
+              onChange={(e) => setJobDescription(e.target.value)}
+              placeholder="Paste the job description you're applying for..."
+              rows={6}
+              className="mt-3 w-full resize-none rounded-md border border-border bg-transparent px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none"
+            />
+            {!isScheduled && (
+              <p className="mt-2 text-xs text-muted-foreground">
+                💡 Adding a job description helps us tailor your prep to the specific role requirements
+              </p>
+            )}
+          </div>
         </div>
 
         <button
