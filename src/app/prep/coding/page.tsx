@@ -2,6 +2,16 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import dynamic from "next/dynamic";
+
+const CodeEditor = dynamic(() => import("@/components/CodeEditor"), {
+  ssr: false,
+  loading: () => (
+    <div className="flex items-center justify-center h-[400px] bg-gray-900 rounded-lg">
+      <span className="text-gray-400">Loading editor...</span>
+    </div>
+  ),
+});
 
 const questionsWithHints = [
   {
@@ -28,8 +38,8 @@ const questionsWithHints = [
 
 export default function CodingPrepPage() {
   const router = useRouter();
-  const [answer, setAnswer] = useState("");
   const [questionIndex, setQuestionIndex] = useState(0);
+  const [code, setCode] = useState("");
 
   const currentQuestion = questionsWithHints[questionIndex];
 
@@ -43,7 +53,11 @@ export default function CodingPrepPage() {
 
   const handleNextQuestion = () => {
     setQuestionIndex((prev) => (prev + 1) % questionsWithHints.length);
-    setAnswer("");
+    setCode("");
+  };
+
+  const handleCodeChange = (newCode: string) => {
+    setCode(newCode);
   };
 
   return (
@@ -69,44 +83,32 @@ export default function CodingPrepPage() {
         </div>
       </div>
 
-      {/* Hints and Answer Section - 30/70 Split */}
-      <div className="mt-4 sm:mt-6 flex-1 flex flex-col lg:flex-row gap-4">
-        {/* Hints Panel - 30% */}
-        <div className="w-full lg:w-[30%] order-2 lg:order-1">
-          <div className="rounded-lg border border-amber-500/30 bg-amber-500/5 p-4 h-full">
-            <div className="flex items-center gap-2 mb-3">
-              <span className="text-lg">💡</span>
-              <h3 className="text-sm font-semibold text-amber-600 dark:text-amber-400">
-                Hints
-              </h3>
-            </div>
-            <ul className="space-y-2">
-              {currentQuestion.hints.map((hint, index) => (
-                <li
-                  key={index}
-                  className="flex items-start gap-2 text-sm text-muted-foreground"
-                >
-                  <span className="text-amber-500 mt-0.5">•</span>
-                  <span>{hint}</span>
-                </li>
-              ))}
-            </ul>
+      {/* Hints Panel */}
+      <div className="mt-4 sm:mt-6">
+        <div className="rounded-lg border border-amber-500/30 bg-amber-500/5 p-4">
+          <div className="flex items-center gap-2 mb-3">
+            <span className="text-lg">💡</span>
+            <h3 className="text-sm font-semibold text-amber-600 dark:text-amber-400">
+              Hints
+            </h3>
           </div>
+          <ul className="flex flex-wrap gap-x-6 gap-y-2">
+            {currentQuestion.hints.map((hint, index) => (
+              <li
+                key={index}
+                className="flex items-start gap-2 text-sm text-muted-foreground"
+              >
+                <span className="text-amber-500 mt-0.5">•</span>
+                <span>{hint}</span>
+              </li>
+            ))}
+          </ul>
         </div>
+      </div>
 
-        {/* Answer Input - 70% */}
-        <div className="w-full lg:w-[70%] flex flex-col order-1 lg:order-2">
-          <div className="flex items-center gap-2 mb-2">
-            <span className="text-lg">✍️</span>
-            <h3 className="text-sm font-semibold text-foreground">Your Answer</h3>
-          </div>
-          <textarea
-            value={answer}
-            onChange={(e) => setAnswer(e.target.value)}
-            placeholder="Type your answer here..."
-            className="w-full flex-1 min-h-[200px] lg:min-h-0 rounded-lg border border-border bg-background p-3 sm:p-4 text-sm sm:text-base text-foreground placeholder:text-muted-foreground resize-none focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent font-mono"
-          />
-        </div>
+      {/* Code Editor Section */}
+      <div className="mt-4 sm:mt-6 flex-1 min-h-[500px]">
+        <CodeEditor onCodeChange={handleCodeChange} />
       </div>
 
       {/* Action Buttons */}
