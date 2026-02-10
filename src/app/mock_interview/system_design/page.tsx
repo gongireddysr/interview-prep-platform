@@ -52,7 +52,7 @@ export default function MockSystemDesignPage() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col px-6 py-4">
+    <div className="flex min-h-screen flex-col px-4 sm:px-6 py-3 sm:py-4">
       {/* Navigation - Top Right */}
       <div className="flex justify-end gap-4">
         <button
@@ -66,23 +66,23 @@ export default function MockSystemDesignPage() {
 
       {/* Question Section */}
       <div className="mt-8 w-full max-w-3xl mx-auto">
-        <div className="rounded-lg border border-border bg-card p-8">
+        <div className="rounded-lg border border-border bg-card p-4 sm:p-8">
           <h2 className="text-sm font-medium text-muted-foreground mb-4">
             Round 4: System Design Question
           </h2>
-          <p className="text-2xl font-semibold text-foreground leading-relaxed">
+          <p className="text-lg sm:text-2xl font-semibold text-foreground leading-relaxed">
             {exampleQuestion}
           </p>
         </div>
       </div>
 
       {/* Answer Input Box */}
-      <div className="mt-8 flex-1 w-full max-w-3xl mx-auto">
+      <div className="mt-4 sm:mt-8 flex-1 w-full max-w-3xl mx-auto">
         <textarea
           value={localAnswer}
           onChange={(e) => setLocalAnswer(e.target.value)}
           placeholder="Type your answer here..."
-          className="w-full h-64 rounded-lg border border-border bg-background p-4 text-foreground placeholder:text-muted-foreground resize-none focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+          className="w-full h-48 sm:h-64 rounded-lg border border-border bg-background p-3 sm:p-4 text-sm sm:text-base text-foreground placeholder:text-muted-foreground resize-none focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
         />
       </div>
 
