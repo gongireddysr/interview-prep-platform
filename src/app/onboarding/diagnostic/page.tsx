@@ -2,6 +2,16 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import dynamic from "next/dynamic";
+
+const CodeEditor = dynamic(() => import("@/components/CodeEditor"), {
+  ssr: false,
+  loading: () => (
+    <div className="flex items-center justify-center h-[300px] bg-gray-900 rounded-lg">
+      <span className="text-gray-400">Loading editor...</span>
+    </div>
+  ),
+});
 
 type TabId = "coding" | "explanation" | "recruiter" | "behavioral";
 
@@ -41,7 +51,6 @@ const QUESTIONS: Record<TabId, string> = {
   behavioral: "Describe a time you fixed a production issue or unexpected bug",
 };
 
-const LANGUAGES = ["JavaScript", "Python", "Java"];
 
 export default function DiagnosticPage() {
   const router = useRouter();
@@ -151,45 +160,17 @@ export default function DiagnosticPage() {
           <div className="mt-4 sm:mt-6 space-y-3 sm:space-y-4">
             {activeTab === "coding" && (
               <>
-                <div>
-                  <label className="text-sm font-medium text-muted-foreground">
-                    Language
-                  </label>
-                  <select
-                    value={formData.coding.language}
-                    onChange={(e) =>
+                <div className="min-h-[400px]">
+                  <CodeEditor
+                    onCodeChange={(code, language) =>
                       setFormData((prev) => ({
                         ...prev,
-                        coding: { ...prev.coding, language: e.target.value },
+                        coding: { ...prev.coding, code, language },
                       }))
                     }
-                    className="mt-2 w-full rounded-md border border-border bg-transparent px-4 py-3 text-sm text-foreground focus:border-primary focus:outline-none"
-                  >
-                    {LANGUAGES.map((lang) => (
-                      <option key={lang} value={lang} className="bg-background">
-                        {lang}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-muted-foreground">
-                    Code
-                  </label>
-                  <textarea
-                    value={formData.coding.code}
-                    onChange={(e) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        coding: { ...prev.coding, code: e.target.value },
-                      }))
-                    }
-                    placeholder="Write your code here..."
-                    rows={6}
-                    className="mt-2 w-full resize-none rounded-md border border-border bg-transparent px-3 sm:px-4 py-2 sm:py-3 font-mono text-xs sm:text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none sm:rows-10"
                   />
                 </div>
-                <div>
+                <div className="mt-4">
                   <label className="text-sm font-medium text-muted-foreground">
                     Short Explanation
                   </label>

@@ -3,6 +3,16 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useMockInterview } from "@/context/MockInterviewContext";
+import dynamic from "next/dynamic";
+
+const CodeEditor = dynamic(() => import("@/components/CodeEditor"), {
+  ssr: false,
+  loading: () => (
+    <div className="flex items-center justify-center h-[400px] bg-gray-900 rounded-lg">
+      <span className="text-gray-400">Loading editor...</span>
+    </div>
+  ),
+});
 
 export default function MockCodingPage() {
   const router = useRouter();
@@ -23,6 +33,10 @@ export default function MockCodingPage() {
   const handleNextRound = () => {
     setAnswer("coding", localAnswer);
     router.push("/mock_interview/behavioral");
+  };
+
+  const handleCodeChange = (code: string) => {
+    setLocalAnswer(code);
   };
 
   return (
@@ -46,8 +60,8 @@ export default function MockCodingPage() {
       </div>
 
       {/* Question Section */}
-      <div className="mt-8 w-full max-w-3xl mx-auto">
-        <div className="rounded-lg border border-border bg-card p-4 sm:p-8">
+      <div className="mt-4 sm:mt-8 w-full">
+        <div className="rounded-lg border border-border bg-card p-4 sm:p-6">
           <h2 className="text-sm font-medium text-muted-foreground mb-4">
             Round 2: Coding Question
           </h2>
@@ -57,14 +71,9 @@ export default function MockCodingPage() {
         </div>
       </div>
 
-      {/* Answer Input Box */}
-      <div className="mt-4 sm:mt-8 flex-1 w-full max-w-3xl mx-auto">
-        <textarea
-          value={localAnswer}
-          onChange={(e) => setLocalAnswer(e.target.value)}
-          placeholder="Type your answer here..."
-          className="w-full h-48 sm:h-64 rounded-lg border border-border bg-background p-3 sm:p-4 text-sm sm:text-base text-foreground placeholder:text-muted-foreground resize-none focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-        />
+      {/* Code Editor Section */}
+      <div className="mt-4 sm:mt-6 flex-1 min-h-[500px]">
+        <CodeEditor onCodeChange={handleCodeChange} />
       </div>
     </div>
   );
