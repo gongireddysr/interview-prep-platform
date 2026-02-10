@@ -55,12 +55,12 @@ export default function MockInterviewResultsPage() {
   const isReady = result.readiness === "ready";
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center px-6">
+    <div className="flex min-h-screen flex-col items-center justify-center px-4 sm:px-6">
       <main className="flex w-full max-w-2xl flex-col items-center">
         {isReady ? (
           <>
-            <div className="text-6xl mb-6">🎉</div>
-            <h1 className="text-3xl font-bold tracking-tight text-center">
+            <div className="text-5xl sm:text-6xl mb-4 sm:mb-6">🎉</div>
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-center">
               Congratulations!
             </h1>
             <p className="mt-4 text-xl text-center text-muted-foreground">
@@ -70,7 +70,7 @@ export default function MockInterviewResultsPage() {
               Score: {result.totalScore}/{result.maxScore}
             </p>
 
-            <div className="mt-12 w-full">
+            <div className="mt-8 sm:mt-12 w-full">
               <button
                 onClick={handleHome}
                 className="w-full rounded-md bg-primary px-6 py-3 text-base font-medium text-primary-foreground hover:bg-primary/90"
@@ -81,8 +81,8 @@ export default function MockInterviewResultsPage() {
           </>
         ) : (
           <>
-            <div className="text-6xl mb-6">📚</div>
-            <h1 className="text-3xl font-bold tracking-tight text-center">
+            <div className="text-5xl sm:text-6xl mb-4 sm:mb-6">📚</div>
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-center">
               You Need More Preparation
             </h1>
             <p className="mt-4 text-center text-muted-foreground">
@@ -106,7 +106,7 @@ export default function MockInterviewResultsPage() {
               </div>
             )}
 
-            <div className="mt-12 flex w-full gap-4">
+            <div className="mt-8 sm:mt-12 flex flex-col sm:flex-row w-full gap-3 sm:gap-4">
               <button
                 onClick={handleStartPreparation}
                 className="flex-1 rounded-md bg-primary px-6 py-3 text-base font-medium text-primary-foreground hover:bg-primary/90"

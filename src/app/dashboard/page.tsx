@@ -25,19 +25,19 @@ export default function DashboardPage() {
   ];
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center px-6">
+    <div className="flex min-h-screen flex-col items-center justify-center px-4 sm:px-6">
       <main className="flex w-full max-w-2xl flex-col items-center">
-        <h1 className="text-3xl font-bold tracking-tight">Choose Your Path</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-center">Choose Your Path</h1>
         <p className="mt-3 text-center text-muted-foreground">
           Based on your assessment, select how you want to prepare.
         </p>
 
-        <div className="mt-12 grid w-full gap-6 sm:grid-cols-2">
+        <div className="mt-8 sm:mt-12 grid w-full gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2">
           {modes.map((mode) => (
             <button
               key={mode.id}
               onClick={() => router.push(mode.route)}
-              className="group flex flex-col items-start rounded-lg border border-border bg-card p-6 text-left transition-all hover:border-primary hover:bg-muted"
+              className="group flex flex-col items-start rounded-lg border border-border bg-card p-4 sm:p-6 text-left transition-all hover:border-primary hover:bg-muted"
             >
               <span className="text-4xl">{mode.icon}</span>
               <h2 className="mt-4 text-lg font-semibold text-foreground">

@@ -113,10 +113,10 @@ export default function DiagnosticPage() {
   const isLastTab = activeTab === "behavioral";
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-background px-6 py-12">
-      <main className="flex w-full max-w-4xl gap-8">
+    <div className="flex min-h-screen flex-col items-center bg-background px-4 sm:px-6 py-4 sm:py-12">
+      <main className="flex w-full max-w-4xl flex-col lg:flex-row gap-4 lg:gap-8">
         {/* Vertical Tab Navigation */}
-        <nav className="flex w-48 flex-shrink-0 flex-col gap-2">
+        <nav className="flex w-full lg:w-48 flex-shrink-0 flex-row lg:flex-col gap-1 sm:gap-2 overflow-x-auto pb-2 lg:pb-0">
           {TABS.map((tab) => {
             const state = tabStates[tab.id];
             const isActive = activeTab === tab.id;
@@ -126,7 +126,7 @@ export default function DiagnosticPage() {
                 key={tab.id}
                 onClick={() => handleTabClick(tab.id)}
                 disabled={!state.unlocked}
-                className={`flex items-center justify-between rounded-md px-4 py-3 text-left text-sm font-medium transition-colors ${
+                className={`flex items-center justify-between rounded-md px-2 sm:px-4 py-2 sm:py-3 text-left text-xs sm:text-sm font-medium transition-colors whitespace-nowrap ${
                   isActive
                     ? "bg-primary text-primary-foreground"
                     : state.unlocked
@@ -142,13 +142,13 @@ export default function DiagnosticPage() {
         </nav>
 
         {/* Tab Content */}
-        <div className="flex-1 rounded-lg border border-border bg-card p-8">
-          <h2 className="text-xl font-semibold text-foreground">
+        <div className="flex-1 rounded-lg border border-border bg-card p-4 sm:p-6 lg:p-8">
+          <h2 className="text-lg sm:text-xl font-semibold text-foreground">
             {TABS.find((t) => t.id === activeTab)?.label}
           </h2>
           <p className="mt-2 text-sm text-muted-foreground">{QUESTIONS[activeTab]}</p>
 
-          <div className="mt-6 space-y-4">
+          <div className="mt-4 sm:mt-6 space-y-3 sm:space-y-4">
             {activeTab === "coding" && (
               <>
                 <div>
@@ -185,8 +185,8 @@ export default function DiagnosticPage() {
                       }))
                     }
                     placeholder="Write your code here..."
-                    rows={10}
-                    className="mt-2 w-full resize-none rounded-md border border-border bg-transparent px-4 py-3 font-mono text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none"
+                    rows={6}
+                    className="mt-2 w-full resize-none rounded-md border border-border bg-transparent px-3 sm:px-4 py-2 sm:py-3 font-mono text-xs sm:text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none sm:rows-10"
                   />
                 </div>
                 <div>
@@ -202,8 +202,8 @@ export default function DiagnosticPage() {
                       }))
                     }
                     placeholder="Briefly explain your approach..."
-                    rows={3}
-                    className="mt-2 w-full resize-none rounded-md border border-border bg-transparent px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none"
+                    rows={2}
+                    className="mt-2 w-full resize-none rounded-md border border-border bg-transparent px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none sm:rows-3"
                   />
                 </div>
               </>
@@ -223,8 +223,8 @@ export default function DiagnosticPage() {
                     }))
                   }
                   placeholder="Type your explanation here..."
-                  rows={12}
-                  className="mt-2 w-full resize-none rounded-md border border-border bg-transparent px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none"
+                  rows={8}
+                  className="mt-2 w-full resize-none rounded-md border border-border bg-transparent px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none"
                 />
               </div>
             )}
@@ -243,8 +243,8 @@ export default function DiagnosticPage() {
                     }))
                   }
                   placeholder="Tell us about yourself..."
-                  rows={12}
-                  className="mt-2 w-full resize-none rounded-md border border-border bg-transparent px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none"
+                  rows={8}
+                  className="mt-2 w-full resize-none rounded-md border border-border bg-transparent px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none"
                 />
               </div>
             )}
@@ -263,19 +263,19 @@ export default function DiagnosticPage() {
                     }))
                   }
                   placeholder="Describe your experience..."
-                  rows={12}
-                  className="mt-2 w-full resize-none rounded-md border border-border bg-transparent px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none"
+                  rows={8}
+                  className="mt-2 w-full resize-none rounded-md border border-border bg-transparent px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none"
                 />
               </div>
             )}
           </div>
 
           {/* Action Buttons */}
-          <div className="mt-8 flex items-center gap-4">
+          <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4">
             {!tabStates[activeTab].completed && (
               <button
                 onClick={handleSubmitTab}
-                className="rounded-md bg-primary px-6 py-3 text-sm font-medium text-primary-foreground hover:bg-primary/90"
+                className="rounded-md bg-primary px-4 sm:px-6 py-2.5 sm:py-3 text-sm font-medium text-primary-foreground hover:bg-primary/90"
               >
                 Submit & Continue
               </button>
@@ -285,7 +285,7 @@ export default function DiagnosticPage() {
               <button
                 onClick={handleFinalSubmit}
                 disabled={isSubmitting}
-                className="rounded-md bg-green-600 px-6 py-3 text-sm font-medium text-white hover:bg-green-700 disabled:cursor-not-allowed disabled:opacity-50"
+                className="rounded-md bg-green-600 px-4 sm:px-6 py-2.5 sm:py-3 text-sm font-medium text-white hover:bg-green-700 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {isSubmitting ? "Evaluating..." : "Submit Diagnostic"}
               </button>
