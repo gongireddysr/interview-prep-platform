@@ -1,6 +1,21 @@
-import Link from "next/link";
+"use client";
+
+import { useRouter } from "next/navigation";
+import { getOrCreateSessionId } from "@/utils/sessionManager";
+import DevResetButton from "@/components/DevResetButton";
 
 export default function Home() {
+  const router = useRouter();
+
+  const handleStartGrind = () => {
+    // Get existing session or create new one
+    const sessionId = getOrCreateSessionId();
+    console.log("Session ID:", sessionId);
+    
+    // Navigate to onboarding
+    router.push("/onboarding");
+  };
+
   return (
     <div className="flex min-h-screen flex-col items-center justify-center px-6">
       <main className="flex max-w-2xl flex-col items-center text-center">
@@ -16,13 +31,16 @@ export default function Home() {
           <p>Realistic interview simulation under real conditions.</p>
         </div>
 
-        <Link
-          href="/onboarding"
+        <button
+          onClick={handleStartGrind}
           className="mt-16 rounded-md bg-primary px-8 py-3 text-base font-medium text-primary-foreground hover:bg-primary/90"
         >
           Start the Grind
-        </Link>
+        </button>
       </main>
+
+      {/* Dev-only reset button */}
+      <DevResetButton />
     </div>
   );
 }
