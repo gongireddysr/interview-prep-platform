@@ -69,6 +69,12 @@ export default function Onboarding() {
         return;
       }
 
+      // Skip Supabase operations if client not available (build time)
+      if (!supabase) {
+        router.push(`/onboarding/upload?status=${interviewStatus}`);
+        return;
+      }
+
       // Check if user session already exists
       const { data: existingSession } = await supabase
         .from("user_sessions")
