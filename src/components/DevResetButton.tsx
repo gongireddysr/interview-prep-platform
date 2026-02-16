@@ -3,15 +3,9 @@
 import { clearSessionId } from "@/utils/sessionManager";
 
 /**
- * Development-only reset button to clear session UUID
- * Only visible in development environment
+ * Reset button to clear session UUID for testing
  */
 export default function DevResetButton() {
-  // Only show in development mode
-  if (process.env.NODE_ENV !== "development") {
-    return null;
-  }
-
   const handleReset = () => {
     clearSessionId();
     alert("Session ID cleared! Next 'Start the Grind' will create a new session.");
