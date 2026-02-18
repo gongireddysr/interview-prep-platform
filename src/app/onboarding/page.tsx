@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
-import { getSessionId } from "@/utils/sessionManager";
+import { getUserId } from "@/utils/sessionManager";
 
 type Role = "frontend" | "backend" | "fullstack" | null;
 type InterviewStatus = "scheduled" | "preparing" | null;
@@ -61,10 +61,10 @@ export default function Onboarding() {
     setIsSubmitting(true);
 
     try {
-      const sessionId = getSessionId();
+      const userId = getUserId();
 
-      if (!sessionId) {
-        console.error("No session ID found");
+      if (!userId) {
+        console.error("No user ID found");
         router.push("/");
         return;
       }
@@ -75,46 +75,34 @@ export default function Onboarding() {
         return;
       }
 
-      // Check if user session already exists
-      const { data: existingSession } = await supabase
-        .from("user_sessions")
-        .select("id")
-        .eq("session_id", sessionId)
-        .single();
-
       // Build interview date if scheduled
       const interviewDate = interviewStatus === "scheduled" && selectedMonth && selectedDay
         ? `${selectedMonth}-${selectedDay}`
         : null;
 
-      if (existingSession) {
-        // Update existing session
-        await supabase
-          .from("user_sessions")
-          .update({
-            target_role: role,
-            years_of_experience: parseInt(yearsOfExperience) || 0,
-            interview_status: interviewStatus,
-            interview_date: interviewDate,
-            updated_at: new Date().toISOString(),
-          })
-          .eq("session_id", sessionId);
-      } else {
-        // Insert new session
-        await supabase.from("user_sessions").insert({
-          session_id: sessionId,
+      // Update existing session (created in "Start the Grind")
+      const { error: updateError } = await supabase
+        .from("user_sessions")
+        .update({
           target_role: role,
           years_of_experience: parseInt(yearsOfExperience) || 0,
           interview_status: interviewStatus,
           interview_date: interviewDate,
-        });
+          updated_at: new Date().toISOString(),
+        })
+        .eq("user_id", userId);
+
+      if (updateError) {
+        console.error("Failed to update user session:", updateError);
+        // Session might not exist - redirect to start
+        router.push("/");
+        return;
       }
 
       router.push(`/onboarding/upload?status=${interviewStatus}`);
     } catch (error) {
       console.error("Error saving user session:", error);
-      // Still navigate even if save fails
-      router.push(`/onboarding/upload?status=${interviewStatus}`);
+      router.push("/");
     } finally {
       setIsSubmitting(false);
     }
