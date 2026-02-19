@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
+import { getUserId } from "@/utils/sessionManager";
 
 const CodeEditor = dynamic(() => import("@/components/CodeEditor"), {
   ssr: false,
@@ -94,10 +95,17 @@ export default function DiagnosticPage() {
   const handleFinalSubmit = async () => {
     setIsSubmitting(true);
     try {
+      const userId = getUserId();
+      if (!userId) {
+        console.error("No user ID found");
+        router.push("/");
+        return;
+      }
+
       const response = await fetch("/api/diagnostics/evaluate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({ ...formData, user_id: userId }),
       });
 
       if (!response.ok) {
