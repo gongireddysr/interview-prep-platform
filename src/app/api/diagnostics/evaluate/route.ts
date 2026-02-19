@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
+import { supabase } from "@/lib/supabase";
 
 interface FormData {
+  user_id: string;
   coding: {
     language: string;
     code: string;
@@ -337,9 +339,9 @@ export async function POST(request: NextRequest) {
     const body: FormData = await request.json();
 
     // Validate input
-    if (!body.coding || !body.explanation || !body.recruiter || !body.behavioral) {
+    if (!body.user_id || !body.coding || !body.explanation || !body.recruiter || !body.behavioral) {
       return NextResponse.json(
-        { error: "Missing required fields. All four rounds must be submitted." },
+        { error: "Missing required fields. user_id and all four rounds must be submitted." },
         { status: 400 }
       );
     }
@@ -374,6 +376,26 @@ export async function POST(request: NextRequest) {
       readinessLabel: label,
       weakAreas,
     };
+
+    // Save diagnostic snapshot to database (immutable record)
+    if (supabase) {
+      const { error: insertError } = await supabase
+        .from("diagnostic_snapshot")
+        .insert({
+          user_id: body.user_id,
+          recruiter_score: recruiterScore.total,
+          coding_score: codingScore.total,
+          explanation_score: explanationScore.total,
+          behavior_score: behavioralScore.total,
+          overall_score: totalScore,
+          readiness_state: readiness,
+        });
+
+      if (insertError) {
+        console.error("Failed to save diagnostic snapshot:", insertError);
+        // Don't block the response - log error but continue
+      }
+    }
 
     return NextResponse.json(result);
   } catch (error) {
