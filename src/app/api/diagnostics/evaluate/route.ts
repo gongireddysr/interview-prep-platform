@@ -395,6 +395,50 @@ export async function POST(request: NextRequest) {
         console.error("Failed to save diagnostic snapshot:", insertError);
         // Don't block the response - log error but continue
       }
+
+      // Update user_readiness (live progress tracker)
+      // Check if user already has a readiness record
+      const { data: existingReadiness } = await supabase
+        .from("user_readiness")
+        .select("baseline_score, total_diagnostics")
+        .eq("user_id", body.user_id)
+        .single();
+
+      if (existingReadiness) {
+        // Update existing record - baseline_score stays unchanged
+        const { error: updateError } = await supabase
+          .from("user_readiness")
+          .update({
+            current_score: totalScore,
+            current_readiness_state: readiness,
+            total_diagnostics: (existingReadiness.total_diagnostics || 0) + 1,
+            last_diagnostic_at: new Date().toISOString(),
+            last_updated_at: new Date().toISOString(),
+          })
+          .eq("user_id", body.user_id);
+
+        if (updateError) {
+          console.error("Failed to update user_readiness:", updateError);
+        }
+      } else {
+        // Insert new record - baseline_score = first diagnostic score
+        const { error: readinessInsertError } = await supabase
+          .from("user_readiness")
+          .insert({
+            user_id: body.user_id,
+            baseline_score: totalScore,
+            current_score: totalScore,
+            current_readiness_state: readiness,
+            total_diagnostics: 1,
+            total_mocks: 0,
+            last_diagnostic_at: new Date().toISOString(),
+            last_updated_at: new Date().toISOString(),
+          });
+
+        if (readinessInsertError) {
+          console.error("Failed to insert user_readiness:", readinessInsertError);
+        }
+      }
     }
 
     return NextResponse.json(result);
