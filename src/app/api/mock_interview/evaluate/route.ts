@@ -352,8 +352,24 @@ export async function POST(request: NextRequest) {
       weakAreas,
     };
 
-    // Update user_readiness (track mock interview completion)
+    // Save mock interview results to history (immutable record)
     if (supabase) {
+      const { error: resultsInsertError } = await supabase
+        .from("mock_interview_results")
+        .insert({
+          user_id: body.user_id,
+          overall_score: totalScore,
+          category_scores: scores,
+          ai_feedback_summary: weakAreas.length > 0 
+            ? `Areas to improve: ${weakAreas.join(", ")}` 
+            : "Strong performance across all categories",
+        });
+
+      if (resultsInsertError) {
+        console.error("Failed to save mock_interview_results:", resultsInsertError);
+      }
+
+      // Update user_readiness (track mock interview completion)
       const { data: existingReadiness } = await supabase
         .from("user_readiness")
         .select("total_mocks, current_score")
