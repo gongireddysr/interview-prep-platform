@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useMockInterview } from "@/context/MockInterviewContext";
+import { getUserId } from "@/utils/sessionManager";
 
 export default function MockSystemDesignPage() {
   const router = useRouter();
@@ -25,7 +26,15 @@ export default function MockSystemDesignPage() {
     setIsSubmitting(true);
     setAnswer("systemDesign", localAnswer);
 
+    const userId = getUserId();
+    if (!userId) {
+      console.error("No user ID found");
+      router.push("/");
+      return;
+    }
+
     const payload = {
+      user_id: userId,
       recruiter: { answer: answers.recruiter },
       coding: { answer: answers.coding },
       behavioral: { answer: answers.behavioral },

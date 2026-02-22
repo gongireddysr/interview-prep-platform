@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
+import { supabase } from "@/lib/supabase";
 
 interface MockInterviewData {
+  user_id: string;
   recruiter: {
     answer: string;
   };
@@ -315,9 +317,9 @@ export async function POST(request: NextRequest) {
   try {
     const body: MockInterviewData = await request.json();
 
-    if (!body.recruiter || !body.coding || !body.behavioral || !body.systemDesign) {
+    if (!body.user_id || !body.recruiter || !body.coding || !body.behavioral || !body.systemDesign) {
       return NextResponse.json(
-        { error: "Missing required fields. All four rounds must be submitted." },
+        { error: "Missing required fields. user_id and all four rounds must be submitted." },
         { status: 400 }
       );
     }
@@ -349,6 +351,51 @@ export async function POST(request: NextRequest) {
       readinessLabel: label,
       weakAreas,
     };
+
+    // Update user_readiness (track mock interview completion)
+    if (supabase) {
+      const { data: existingReadiness } = await supabase
+        .from("user_readiness")
+        .select("total_mocks, current_score")
+        .eq("user_id", body.user_id)
+        .single();
+
+      if (existingReadiness) {
+        // Update existing record - increment total_mocks
+        const { error: updateError } = await supabase
+          .from("user_readiness")
+          .update({
+            total_mocks: (existingReadiness.total_mocks || 0) + 1,
+            current_score: totalScore,
+            current_readiness_state: readiness,
+            last_mock_at: new Date().toISOString(),
+            last_updated_at: new Date().toISOString(),
+          })
+          .eq("user_id", body.user_id);
+
+        if (updateError) {
+          console.error("Failed to update user_readiness for mock:", updateError);
+        }
+      } else {
+        // User hasn't done diagnostic yet - create record with mock data
+        const { error: insertError } = await supabase
+          .from("user_readiness")
+          .insert({
+            user_id: body.user_id,
+            baseline_score: totalScore,
+            current_score: totalScore,
+            current_readiness_state: readiness,
+            total_diagnostics: 0,
+            total_mocks: 1,
+            last_mock_at: new Date().toISOString(),
+            last_updated_at: new Date().toISOString(),
+          });
+
+        if (insertError) {
+          console.error("Failed to insert user_readiness for mock:", insertError);
+        }
+      }
+    }
 
     return NextResponse.json(result);
   } catch (error) {
